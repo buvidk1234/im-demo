@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.imdemo.infrastructure.repository.mapper.ChatGroupMapper">
+
+    <resultMap id="BaseResultMap" type="com.it.imdemo.infrastructure.repository.entity.ChatGroupEntity">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="description" column="description" />
+            <result property="ownerId" column="owner_id" />
+            <result property="avatarUrl" column="avatar_url" />
+            <result property="createdAt" column="created_at" />
+            <result property="updatedAt" column="updated_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,description,owner_id,avatar_url,created_at,
+        updated_at
+    </sql>
+</mapper>
