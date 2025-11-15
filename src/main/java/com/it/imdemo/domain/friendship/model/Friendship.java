@@ -21,16 +21,24 @@ public class Friendship {
     @Schema(description="")
     private Date updatedAt;
 
-    public void addFriendship(Long userId, Long friendId) {
-        this.userId = userId;
-        this.friendId = friendId;
-        this.status = 0; // pending
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
+    public static Friendship create(Long userId, Long friendId) {
+        Friendship friendship = new Friendship();
+        friendship.userId = userId;
+        friendship.friendId = friendId;
+        friendship.status = 0; // pending
+        friendship.createdAt = new Date();
+        friendship.updatedAt = new Date();
+        return friendship;
     }
 
     public void agreeFriendship() {
         this.status = 1; // accepted
+        this.updatedAt = new Date();
+    }
+
+
+    public void removeFriendship() {
+        this.status = 3; // deleted
         this.updatedAt = new Date();
     }
 }

@@ -15,26 +15,30 @@ public class FriendshipApplicationService {
     private FriendshipRepository friendshipRepository;
 
     public void addFriend(Long userId, Long friendId) {
-        Friendship friendship = new Friendship();
         friendshipRepository.findByUserIdAndFriendId(userId, friendId).ifPresent(f -> {
             throw new IllegalArgumentException("Already friends");
         });
-        friendship.addFriendship(userId, friendId);
+        Friendship friendship = Friendship.create(userId, friendId);
         friendshipRepository.save(friendship);
     }
 
     public void agreeFriend(Long userId, Long friendId) {
-        Optional<Friendship> optionalFriendship = friendshipRepository.findByUserIdAndFriendId(userId, friendId);
-        if (optionalFriendship.isPresent()) {
-            Friendship friendship = optionalFriendship.get();
-            friendship.agreeFriendship();
-            friendshipRepository.save(friendship);
-        } else {
-            throw new IllegalArgumentException("Friend request not found");
-        }
+        Friendship friendship = friendshipRepository.findByUserIdAndFriendId(userId, friendId)
+                .orElseThrow(() -> new IllegalArgumentException("Friend request not found"));
+        friendship.agreeFriendship();
+        friendshipRepository.save(friendship);
+
     }
+
     public List<Long> listFriends(Long userId) {
         List<Friendship> friendships = friendshipRepository.findAllFriendsByUserId(userId);
         return friendships.stream().map(Friendship::getFriendId).toList();
+    }
+
+    public void removeFriend(Long userId, Long friendId) {
+        Friendship friendship = friendshipRepository.findByUserIdAndFriendId(userId, friendId)
+                .orElseThrow(() -> new IllegalArgumentException("Friendship not found"));
+        friendship.removeFriendship();
+        friendshipRepository.save(friendship);
     }
 }
