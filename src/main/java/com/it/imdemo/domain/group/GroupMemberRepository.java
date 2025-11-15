@@ -9,5 +9,5 @@ public interface GroupMemberRepository {
     void save(GroupMember groupMember);
     boolean exists(Long groupId, Long userId);
 
-    List<Long> findByGroupId(Long groupId);
+    List<Long> findMembersByGroupId(Long groupId);
 }

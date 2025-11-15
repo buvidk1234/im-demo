@@ -6,5 +6,5 @@ import lombok.Data;
 public class AddMemberCmd {
     private Long groupId;
     private Long operatorId;
-    private Long memberId;
+    private Long userToAddId;
 }

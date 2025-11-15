@@ -26,7 +26,7 @@ public class GroupMemberRepositoryImpl implements GroupMemberRepository {
     }
 
     @Override
-    public List<Long> findByGroupId(Long groupId) {
+    public List<Long> findMembersByGroupId(Long groupId) {
         return new LambdaQueryChainWrapper<>(groupMemberMapper)
                 .eq(GroupMemberEntity::getGroupId, groupId)
                 .list()
