@@ -9,6 +9,7 @@ import com.it.imdemo.domain.message.model.Message;
 import com.it.imdemo.domain.message.model.ReadReceipt;
 import com.it.imdemo.domain.message.WebSocketGateway;
 import jakarta.annotation.Resource;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +29,15 @@ public class MessageApplicationService {
     @Resource
     private ReadReceiptRepository readReceiptRepository;
 
+    @Resource
+    private ApplicationEventPublisher publisher;
+
 
     @Transactional
     public void sendMessage(SendMessageCmd cmd) {
 
-        Conversation conversation = conversationRepository.findByTypeAndSenderIdAndReceiverId(cmd.getType(),cmd.getSenderId(),cmd.getTargetId())
-                .orElseGet(()->{
+        Conversation conversation = conversationRepository.findByTypeAndSenderIdAndReceiverId(cmd.getType(), cmd.getSenderId(), cmd.getTargetId())
+                .orElseGet(() -> {
                     Conversation c = Conversation.create(cmd.getType(), cmd.getSenderId(), cmd.getTargetId());
                     conversationRepository.save(c);
                     return c;
@@ -49,18 +53,7 @@ public class MessageApplicationService {
         conversation.setLastMessageId(message.getId());
         conversationRepository.save(conversation);
 
-        if (cmd.getType() == 1) { // 群聊
-            groupMemberRepository.findByGroupId(cmd.getTargetId())
-                    .stream()
-                    .filter(userId -> !userId.equals(cmd.getSenderId()))
-                    .forEach(userId -> {
-                        ReadReceipt receipt = new ReadReceipt();
-                        receipt.setMessageId(message.getId());
-                        receipt.setUserId(userId);
-                        receipt.setReadAt(null); // 初始未读
-                        readReceiptRepository.save(receipt);
-                    });
-        }
+        publisher.publishEvent(new GroupMessageSentEvent(this, cmd.getSenderId(), cmd.getTargetId(), message.getId()));
     }
 
     @Resource
@@ -68,7 +61,7 @@ public class MessageApplicationService {
 
     public void onUserOnline(Long userId) {
 
-        List<Message> unreadMessages= messageRepository.findUnreadMessagesByUserId(userId);
+        List<Message> unreadMessages = messageRepository.findUnreadMessagesByUserId(userId);
 
         // push unread messages
         webSocketGateway.pushUnreadMessagesToUser(userId, unreadMessages);

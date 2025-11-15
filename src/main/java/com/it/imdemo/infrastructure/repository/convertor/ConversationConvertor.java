@@ -4,7 +4,7 @@ import com.it.imdemo.domain.message.model.Conversation;
 import com.it.imdemo.infrastructure.repository.entity.ConversationEntity;
 import org.springframework.beans.BeanUtils;
 
-public class ConversationConverter {
+public class ConversationConvertor {
     public static Conversation toDomain(ConversationEntity conversationEntity) {
         Conversation conversation = new Conversation();
         BeanUtils.copyProperties(conversationEntity, conversation);

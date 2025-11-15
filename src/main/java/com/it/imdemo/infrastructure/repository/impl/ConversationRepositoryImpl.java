@@ -3,7 +3,7 @@ package com.it.imdemo.infrastructure.repository.impl;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.it.imdemo.domain.message.ConversationRepository;
 import com.it.imdemo.domain.message.model.Conversation;
-import com.it.imdemo.infrastructure.repository.convertor.ConversationConverter;
+import com.it.imdemo.infrastructure.repository.convertor.ConversationConvertor;
 import com.it.imdemo.infrastructure.repository.entity.ConversationEntity;
 import com.it.imdemo.infrastructure.repository.mapper.ConversationMapper;
 import jakarta.annotation.Resource;
@@ -20,12 +20,14 @@ public class ConversationRepositoryImpl implements ConversationRepository {
     @Override
     public Optional<Conversation> findById(Long conversationId) {
         ConversationEntity conversationEntity = new LambdaQueryChainWrapper<>(conversationMapper).eq(ConversationEntity::getId, conversationId).one();
-        return Optional.ofNullable(conversationEntity).map(ConversationConverter::toDomain);
+        return Optional.ofNullable(conversationEntity).map(ConversationConvertor::toDomain);
     }
 
     @Override
     public void save(Conversation conversation) {
-        ConversationEntity conversationEntity = ConversationConverter.toEntity(conversation);
+        ConversationEntity conversationEntity = ConversationConvertor.toEntity(conversation);
+        // 存储逻辑可以存的时候统一处理userAId和userBId的顺序，或者在查询的时候处理，这里选择存储的时候处理
+        // 无论如何都是对业务层透明的
         conversationEntity.setUserAId(Math.min(conversation.getUserAId(), conversation.getUserBId()));
         conversationEntity.setUserBId(Math.max(conversation.getUserAId(), conversation.getUserBId()));
         conversationMapper.insertOrUpdate(conversationEntity);
@@ -47,6 +49,6 @@ public class ConversationRepositoryImpl implements ConversationRepository {
                     .eq(ConversationEntity::getUserBId, Math.max(senderId, receiverId))
                     .one();
         }
-        return Optional.ofNullable(conversationEntity).map(ConversationConverter::toDomain);
+        return Optional.ofNullable(conversationEntity).map(ConversationConvertor::toDomain);
     }
 }
