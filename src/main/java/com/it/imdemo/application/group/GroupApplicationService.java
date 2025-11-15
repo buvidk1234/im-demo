@@ -39,9 +39,12 @@ public class GroupApplicationService {
 
         userApplicationService.assertAvailable(cmd.getUserToAddId());
 
-        GroupMember groupMember = groupDomainService.addMemberToGroup(chatGroup, cmd.getOperatorId(), cmd.getUserToAddId());
+        groupDomainService.assertCanAddMember(chatGroup, cmd.getOperatorId(), cmd.getUserToAddId());
+
+        GroupMember groupMember = GroupMember.create(chatGroup.getId(), cmd.getUserToAddId(), GroupMember.Role.MEMBER);
 
         groupMemberRepository.save(groupMember);
+
     }
 
     public List<Long> findMembersOfGroup(long groupId) {

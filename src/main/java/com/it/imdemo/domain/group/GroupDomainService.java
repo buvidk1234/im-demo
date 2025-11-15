@@ -12,22 +12,20 @@ public class GroupDomainService {
     @Resource
     private GroupMemberRepository groupMemberRepository;
 
-    public GroupMember addMemberToGroup(ChatGroup chatGroup, Long operatorId, Long userToAddId) {
 
-
+    public void assertCanAddMember(ChatGroup chatGroup, Long operatorId, Long userToAddId) {
         if(operatorId.equals(userToAddId)){
             throw new IllegalArgumentException("不能添加自己到群组");
         }
 
-        boolean isExist = groupMemberRepository.exists(operatorId, userToAddId);
+        boolean operatorExists = groupMemberRepository.exists(chatGroup.getId(), operatorId);
+        if (!operatorExists) {
+            throw new IllegalArgumentException("操作用户不是群成员，无法添加成员");
+        }
+
+        boolean isExist = groupMemberRepository.exists(chatGroup.getId(), userToAddId);
         if (isExist) {
             throw new IllegalArgumentException("成员已存在群组中");
         }
-        return GroupMember.builder()
-                .groupId(chatGroup.getId())
-                .userId(userToAddId)
-                .role(GroupMember.Role.MEMBER.getValue())
-                .build();
     }
-
 }
