@@ -20,8 +20,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void save(User user) {
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(user, userEntity);
+        UserEntity userEntity = UserConvertor.toEntity(user);
         userMapper.insertOrUpdate(userEntity);
     }
 

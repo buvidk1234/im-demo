@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class UserRegisterCmd {
 
+
     @Schema(description="")
     private String username;
     @Schema(description="")

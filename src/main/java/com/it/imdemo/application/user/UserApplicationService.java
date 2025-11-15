@@ -1,11 +1,11 @@
 package com.it.imdemo.application.user;
 
+import com.it.imdemo.application.assembler.UserAssembler;
 import com.it.imdemo.domain.user.UserRepository;
 import com.it.imdemo.domain.user.model.User;
 import com.it.imdemo.shared.JwtUtil;
 import com.it.imdemo.shared.exception.AuthenticationException;
 import jakarta.annotation.Resource;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 
@@ -17,9 +17,7 @@ public class UserApplicationService {
     private JwtUtil jwtUtil;
 
     public void register(UserRegisterCmd cmd) {
-        User user = new User();
-        BeanUtils.copyProperties(cmd, user);
-        user.initializeForRegister();
+        User user = User.create(cmd.getUsername(), cmd.getPassword(), cmd.getNickname(),cmd.getAvatarUrl(), cmd.getPhone(), cmd.getEmail());
         userRepository.save(user);
     }
 
@@ -29,10 +27,31 @@ public class UserApplicationService {
         if(!user.validateLogin(qry.getPassword())){
             throw new AuthenticationException("Invalid credentials");
         }
-        UserLoginResponse userLoginResponse = new UserLoginResponse();
-        BeanUtils.copyProperties(user, userLoginResponse);
+        UserLoginResponse userLoginResponse = UserAssembler.toUserLoginResponse(user);
         String token = jwtUtil.generateToken(user.getId().toString());
         userLoginResponse.setToken(token);
         return userLoginResponse;
+    }
+
+    public void changePassword(Long userId, String newPassword) {
+        User user = userRepository.getById(userId)
+                .orElseThrow(() -> new AuthenticationException("User not found"));
+        user.changePassword(newPassword);
+        userRepository.save(user);
+    }
+
+    public void disableUser(Long userId) {
+        User user = userRepository.getById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.disable();
+        userRepository.save(user);
+    }
+
+
+
+    public void assertAvailable(Long userId) {
+        User user = userRepository.getById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.assertAvailable();
     }
 }

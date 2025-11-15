@@ -2,11 +2,15 @@ package com.it.imdemo.domain.user.model;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
+import java.util.Random;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Schema(description="")
     private Long id;
@@ -18,10 +22,8 @@ public class User {
     private String nickname;
     @Schema(description="")
     private String avatarUrl;
-    @Schema(description="")
-    private String phone;
-    @Schema(description="")
-    private String email;
+
+    private ContactInformation contactInformation;
     @Schema(description="1=active,0=disabled")
     private Integer status;
     @Schema(description="")
@@ -29,10 +31,24 @@ public class User {
     @Schema(description="")
     private Date updatedAt;
 
-    public void initializeForRegister() {
-        this.status = 1;
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
+
+    public static User create(@NonNull String username,@NonNull String password, String nickname,String avatarUrl, String phone, String email) {
+
+        return User.builder()
+                .username(username)
+                .password(password)
+                .nickname(nickname != null ? nickname : "用户" + new Random().nextInt(10000))
+                .avatarUrl(avatarUrl)
+                .contactInformation(
+                        ContactInformation.builder()
+                                .phone(phone)
+                                .email(email)
+                                .build()
+                )
+                .status(1)
+                .createdAt(new Date())
+                .updatedAt(new Date())
+                .build();
     }
 
 
@@ -42,5 +58,41 @@ public class User {
 
     public boolean isActive() {
         return status.equals(1);
+    }
+
+    public void changePassword(String newPassword) {
+
+        this.assertPasswordNotEmpty(newPassword);
+
+        this.assertPasswordNotSame(password, this.encryptedValue(newPassword));
+
+        this.setPassword(this.encryptedValue(newPassword));
+    }
+
+    private void assertPasswordNotSame(String password, String newPassword) {
+        if(password.equals(newPassword)) {
+            throw new RuntimeException("New password must be different from the current password.");
+        }
+    }
+
+    private void assertPasswordNotEmpty(String newPassword) {
+        if(newPassword == null || newPassword.isEmpty()) {
+            throw new RuntimeException("New password must not be empty.");
+        }
+    }
+
+    private String encryptedValue(String password) {
+        // 盐值加密
+        return password;
+    }
+
+    public void disable() {
+        status = 0;
+    }
+
+    public void assertAvailable() {
+        if(!isActive()) {
+            throw new RuntimeException("User is disabled.");
+        }
     }
 }
