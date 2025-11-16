@@ -2,6 +2,8 @@ package com.it.imdemo.infrastructure.repository.entity;
 
 
 import java.util.Date;
+
+import com.it.imdemo.domain.user.model.OnlineStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -27,4 +29,9 @@ public class UserEntity {
     private Date createdAt;
     @Schema(description="")
     private Date updatedAt;
+
+    // 0=OFFLINE,1=ONLINE,2=AWAY
+    private Integer onlineStatus;
+    private Integer preferredOnlineStatus;
+    private Date lastOnlineAt;
 }

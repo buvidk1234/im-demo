@@ -1,5 +1,7 @@
 package com.it.imdemo.interfaces.websocket;
 
+import com.it.imdemo.application.user.UserApplicationService;
+import jakarta.annotation.Resource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -15,6 +17,9 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
     private static final ConcurrentHashMap<Long, WebSocketSession> userSessions = new ConcurrentHashMap<>();
 
+    @Resource
+    private UserApplicationService userApplicationService;
+
     public WebSocketSession getSessionByUserId(Long userId) {
         return userSessions.get(userId);
     }
@@ -23,10 +28,13 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
         Long userId = getUserIdFromSession(session); // 从 query 或 token
         userSessions.put(userId, session);
+        userApplicationService.makeUserOnline(userId);
     }
 
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
+        Long userId = getUserIdFromSession(session);
+        userApplicationService.makeUserOffline(userId);
         userSessions.entrySet().removeIf(entry -> entry.getValue().equals(session));
     }
 

@@ -56,4 +56,17 @@ public class UserApplicationService {
                 .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_FOUND));
         user.assertAvailable();
     }
+
+    public void makeUserOnline(Long userId) {
+        User user = userRepository.getById(userId)
+                .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_FOUND));
+        user.makeOnline();
+        userRepository.save(user);
+    }
+    public void makeUserOffline(Long userId) {
+        User user = userRepository.getById(userId)
+                .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_FOUND));
+        user.makeOffline();
+        userRepository.save(user);
+    }
 }

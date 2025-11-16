@@ -31,6 +31,10 @@ public class User {
     @Schema(description="")
     private Date updatedAt;
 
+    private OnlineStatus onlineStatus;
+    private OnlineStatus preferredOnlineStatus;
+    private Date lastOnlineAt;
+
 
     public static User create(@NonNull String username,@NonNull String password, String nickname,String avatarUrl, String phone, String email) {
 
@@ -46,6 +50,9 @@ public class User {
                                 .build()
                 )
                 .status(1)
+                .onlineStatus(OnlineStatus.OFFLINE)
+                .preferredOnlineStatus(OnlineStatus.ONLINE)
+                .lastOnlineAt(new Date())
                 .createdAt(new Date())
                 .updatedAt(new Date())
                 .build();
@@ -94,5 +101,15 @@ public class User {
         if(!isActive()) {
             throw new RuntimeException("User is disabled.");
         }
+    }
+
+    public void makeOnline() {
+        this.onlineStatus = preferredOnlineStatus;
+        this.lastOnlineAt = new Date();
+    }
+
+    public void makeOffline() {
+        this.onlineStatus = OnlineStatus.OFFLINE;
+        this.lastOnlineAt = new Date();
     }
 }
