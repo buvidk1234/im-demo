@@ -2,6 +2,8 @@ package com.it.imdemo.application.friendship;
 
 import com.it.imdemo.domain.friendship.model.Friendship;
 import com.it.imdemo.domain.friendship.repository.FriendshipRepository;
+import com.it.imdemo.shared.exception.BizErrorCode;
+import com.it.imdemo.shared.exception.BizException;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,7 @@ public class FriendshipApplicationService {
 
     public void addFriend(Long userId, Long friendId) {
         friendshipRepository.findByUserIdAndFriendId(userId, friendId).ifPresent(f -> {
-            throw new IllegalArgumentException("Already friends");
+            throw new BizException(BizErrorCode.FRIENDSHIP_ALREADY_EXISTS);
         });
         Friendship friendship = Friendship.create(userId, friendId);
         friendshipRepository.save(friendship);
@@ -24,7 +26,7 @@ public class FriendshipApplicationService {
 
     public void agreeFriend(Long userId, Long friendId) {
         Friendship friendship = friendshipRepository.findByUserIdAndFriendId(userId, friendId)
-                .orElseThrow(() -> new IllegalArgumentException("Friend request not found"));
+                .orElseThrow(() -> new BizException(BizErrorCode.FRIENDSHIP_NOT_REQUESTED));
         friendship.agreeFriendship();
         friendshipRepository.save(friendship);
 
@@ -37,7 +39,7 @@ public class FriendshipApplicationService {
 
     public void removeFriend(Long userId, Long friendId) {
         Friendship friendship = friendshipRepository.findByUserIdAndFriendId(userId, friendId)
-                .orElseThrow(() -> new IllegalArgumentException("Friendship not found"));
+                .orElseThrow(() -> new BizException(BizErrorCode.FRIENDSHIP_NOT_FOUND));
         friendship.removeFriendship();
         friendshipRepository.save(friendship);
     }

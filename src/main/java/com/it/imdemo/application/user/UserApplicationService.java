@@ -5,6 +5,8 @@ import com.it.imdemo.domain.user.UserRepository;
 import com.it.imdemo.domain.user.model.User;
 import com.it.imdemo.shared.JwtUtil;
 import com.it.imdemo.shared.exception.AuthenticationException;
+import com.it.imdemo.shared.exception.BizErrorCode;
+import com.it.imdemo.shared.exception.BizException;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,7 @@ public class UserApplicationService {
 
     public UserLoginResponse login(UserLoginQry qry) {
         User user = userRepository.getByUsername(qry.getUsername())
-                .orElseThrow(() -> new AuthenticationException("User not found"));
+                .orElseThrow(() -> new BizException(BizErrorCode.GROUP_NOT_FOUND));
         if(!user.validateLogin(qry.getPassword())){
             throw new AuthenticationException("Invalid credentials");
         }
@@ -35,14 +37,14 @@ public class UserApplicationService {
 
     public void changePassword(Long userId, String newPassword) {
         User user = userRepository.getById(userId)
-                .orElseThrow(() -> new AuthenticationException("User not found"));
+                .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_FOUND));
         user.changePassword(newPassword);
         userRepository.save(user);
     }
 
     public void disableUser(Long userId) {
         User user = userRepository.getById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_FOUND));
         user.disable();
         userRepository.save(user);
     }
@@ -51,7 +53,7 @@ public class UserApplicationService {
 
     public void assertAvailable(Long userId) {
         User user = userRepository.getById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_FOUND));
         user.assertAvailable();
     }
 }

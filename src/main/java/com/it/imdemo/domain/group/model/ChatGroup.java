@@ -1,13 +1,12 @@
 package com.it.imdemo.domain.group.model;
 
 
-import com.it.imdemo.application.group.CreateGroupCmd;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.it.imdemo.shared.exception.BizErrorCode;
+import com.it.imdemo.shared.exception.BizException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
 
@@ -59,7 +58,7 @@ public class ChatGroup {
 
     public void assertNotFull() {
         if(memberCount >= maxMemberCount) {
-            throw new IllegalArgumentException("群成员已达上限");
+            throw new BizException(BizErrorCode.GROUP_MEMBER_LIMIT_REACHED);
         }
     }
 }

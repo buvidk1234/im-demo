@@ -6,6 +6,8 @@ import com.it.imdemo.domain.group.GroupMemberRepository;
 import com.it.imdemo.domain.group.GroupRepository;
 import com.it.imdemo.domain.group.model.ChatGroup;
 import com.it.imdemo.domain.group.model.GroupMember;
+import com.it.imdemo.shared.exception.BizErrorCode;
+import com.it.imdemo.shared.exception.BizException;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +36,7 @@ public class GroupApplicationService {
     @Transactional
     public void addMember(AddMemberCmd cmd) {
         ChatGroup chatGroup = groupRepository.getById(cmd.getGroupId())
-                .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+                .orElseThrow(() -> new BizException(BizErrorCode.GROUP_NOT_FOUND));
 
         userApplicationService.assertAvailable(cmd.getOperatorId());
 
