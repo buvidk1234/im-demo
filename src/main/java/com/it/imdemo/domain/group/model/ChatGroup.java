@@ -18,19 +18,23 @@ import java.util.Date;
 @AllArgsConstructor
 public class ChatGroup {
 
-    @Schema(description="")
+
     private Long id;
-    @Schema(description="")
+
     private String name;
-    @Schema(description="")
+
     private String description;
-    @Schema(description="")
+
     private Long ownerId;
-    @Schema(description="")
+
     private String avatarUrl;
-    @Schema(description="")
+
+    private Integer memberCount;
+    // why not final, if you are a vip, you can have more members
+    private Integer maxMemberCount;
+
     private Date createdAt;
-    @Schema(description="")
+
     private Date updatedAt;
 
 
@@ -42,8 +46,20 @@ public class ChatGroup {
         if(chatGroup.avatarUrl == null || chatGroup.avatarUrl.isEmpty()) {
             chatGroup.avatarUrl = "https://example.com/default-avatar.png";
         }
+        chatGroup.memberCount  = 0;
+        chatGroup.maxMemberCount=200;
         chatGroup.createdAt = new Date();
         chatGroup.updatedAt = new Date();
         return chatGroup;
+    }
+
+    public void addMember(Long userToAddId) {
+        memberCount++;
+    }
+
+    public void assertNotFull() {
+        if(memberCount >= maxMemberCount) {
+            throw new IllegalArgumentException("群成员已达上限");
+        }
     }
 }

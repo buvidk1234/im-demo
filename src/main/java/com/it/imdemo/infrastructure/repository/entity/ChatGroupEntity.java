@@ -21,4 +21,7 @@ public class ChatGroupEntity {
     private Date createdAt;
     @Schema(description="")
     private Date updatedAt;
+
+    private Integer memberCount;
+    private Integer maxMemberCount;
 }

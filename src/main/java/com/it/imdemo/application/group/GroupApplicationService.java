@@ -8,6 +8,7 @@ import com.it.imdemo.domain.group.model.ChatGroup;
 import com.it.imdemo.domain.group.model.GroupMember;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class GroupApplicationService {
         groupMemberRepository.save(groupMember);
         return groupId;
     }
-
+    @Transactional
     public void addMember(AddMemberCmd cmd) {
         ChatGroup chatGroup = groupRepository.getById(cmd.getGroupId())
                 .orElseThrow(() -> new IllegalArgumentException("Group not found"));
@@ -40,6 +41,10 @@ public class GroupApplicationService {
         userApplicationService.assertAvailable(cmd.getUserToAddId());
 
         groupDomainService.assertCanAddMember(chatGroup, cmd.getOperatorId(), cmd.getUserToAddId());
+
+        chatGroup.addMember(cmd.getUserToAddId());
+
+        groupRepository.save(chatGroup);
 
         GroupMember groupMember = GroupMember.create(chatGroup.getId(), cmd.getUserToAddId(), GroupMember.Role.MEMBER);
 
