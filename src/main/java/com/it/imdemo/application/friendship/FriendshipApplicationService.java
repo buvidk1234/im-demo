@@ -1,14 +1,13 @@
 package com.it.imdemo.application.friendship;
 
 import com.it.imdemo.domain.friendship.model.Friendship;
-import com.it.imdemo.domain.friendship.repository.FriendshipRepository;
-import com.it.imdemo.shared.exception.BizErrorCode;
-import com.it.imdemo.shared.exception.BizException;
+import com.it.imdemo.domain.friendship.FriendshipRepository;
+import com.it.imdemo.commons.exception.BizErrorCode;
+import com.it.imdemo.commons.exception.BizException;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FriendshipApplicationService {

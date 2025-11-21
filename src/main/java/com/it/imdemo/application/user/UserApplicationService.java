@@ -1,12 +1,11 @@
 package com.it.imdemo.application.user;
 
-import com.it.imdemo.application.assembler.UserAssembler;
 import com.it.imdemo.domain.user.UserRepository;
 import com.it.imdemo.domain.user.model.User;
-import com.it.imdemo.shared.JwtUtil;
-import com.it.imdemo.shared.exception.AuthenticationException;
-import com.it.imdemo.shared.exception.BizErrorCode;
-import com.it.imdemo.shared.exception.BizException;
+import com.it.imdemo.infrastructure.util.JwtUtil;
+import com.it.imdemo.commons.exception.AuthenticationException;
+import com.it.imdemo.commons.exception.BizErrorCode;
+import com.it.imdemo.commons.exception.BizException;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +22,16 @@ public class UserApplicationService {
         userRepository.save(user);
     }
 
-    public UserLoginResponse login(UserLoginQry qry) {
+    public UserLoginResp login(UserLoginQry qry) {
         User user = userRepository.getByUsername(qry.getUsername())
                 .orElseThrow(() -> new BizException(BizErrorCode.GROUP_NOT_FOUND));
         if(!user.validateLogin(qry.getPassword())){
             throw new AuthenticationException("Invalid credentials");
         }
-        UserLoginResponse userLoginResponse = UserAssembler.toUserLoginResponse(user);
+        UserLoginResp userLoginResp = UserAssembler.toUserLoginResponse(user);
         String token = jwtUtil.generateToken(user.getId().toString());
-        userLoginResponse.setToken(token);
-        return userLoginResponse;
+        userLoginResp.setToken(token);
+        return userLoginResp;
     }
 
     public void changePassword(Long userId, String newPassword) {

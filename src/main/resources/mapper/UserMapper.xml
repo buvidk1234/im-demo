@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.it.imdemo.infrastructure.repository.mapper.UserMapper">
+<mapper namespace="com.it.imdemo.infrastructure.persistence.mapper.UserMapper">
 
-    <resultMap id="BaseResultMap" type="com.it.imdemo.infrastructure.repository.entity.UserEntity">
+    <resultMap id="BaseResultMap" type="com.it.imdemo.infrastructure.persistence.entity.UserEntity">
             <id property="id" column="id" />
             <result property="username" column="username" />
             <result property="password" column="password" />

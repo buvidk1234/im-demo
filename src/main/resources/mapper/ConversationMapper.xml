@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.it.imdemo.infrastructure.repository.mapper.ConversationMapper">
+<mapper namespace="com.it.imdemo.infrastructure.persistence.mapper.ConversationMapper">
 
-    <resultMap id="BaseResultMap" type="com.it.imdemo.infrastructure.repository.entity.ConversationEntity">
+    <resultMap id="BaseResultMap" type="com.it.imdemo.infrastructure.persistence.entity.ConversationEntity">
             <id property="id" column="id" />
             <result property="type" column="type" />
             <result property="userAId" column="user_a_id" />

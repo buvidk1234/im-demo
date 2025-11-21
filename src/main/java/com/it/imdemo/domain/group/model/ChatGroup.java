@@ -1,8 +1,8 @@
 package com.it.imdemo.domain.group.model;
 
 
-import com.it.imdemo.shared.exception.BizErrorCode;
-import com.it.imdemo.shared.exception.BizException;
+import com.it.imdemo.commons.exception.BizErrorCode;
+import com.it.imdemo.commons.exception.BizException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

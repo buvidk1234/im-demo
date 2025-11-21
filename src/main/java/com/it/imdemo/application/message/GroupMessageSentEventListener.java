@@ -2,6 +2,7 @@ package com.it.imdemo.application.message;
 
 import com.it.imdemo.application.group.GroupApplicationService;
 import com.it.imdemo.domain.message.ConversationRepository;
+import com.it.imdemo.domain.message.event.GroupMessageSentEvent;
 import com.it.imdemo.domain.message.ReadReceiptRepository;
 import com.it.imdemo.domain.message.model.ReadReceipt;
 import jakarta.annotation.Resource;

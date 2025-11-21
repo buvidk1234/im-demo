@@ -1,13 +1,10 @@
 package com.it.imdemo.application.message;
 
 import com.it.imdemo.domain.group.GroupMemberRepository;
-import com.it.imdemo.domain.message.ConversationRepository;
-import com.it.imdemo.domain.message.MessageRepository;
-import com.it.imdemo.domain.message.ReadReceiptRepository;
+import com.it.imdemo.domain.message.*;
+import com.it.imdemo.domain.message.event.GroupMessageSentEvent;
 import com.it.imdemo.domain.message.model.Conversation;
 import com.it.imdemo.domain.message.model.Message;
-import com.it.imdemo.domain.message.model.ReadReceipt;
-import com.it.imdemo.domain.message.WebSocketGateway;
 import jakarta.annotation.Resource;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
