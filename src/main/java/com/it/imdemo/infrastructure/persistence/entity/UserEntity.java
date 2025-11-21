@@ -3,18 +3,19 @@ package com.it.imdemo.infrastructure.persistence.entity;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.it.imdemo.domain.user.model.OnlineStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
+@TableName("users")
 public class UserEntity {
     @Schema(description="")
     private Long id;
     @Schema(description="")
     private String username;
-    @Schema(description="")
-    private String password;
+    private String passwordHash;
     @Schema(description="")
     private String nickname;
     @Schema(description="")

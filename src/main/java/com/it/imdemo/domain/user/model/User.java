@@ -17,7 +17,7 @@ public class User {
     @Schema(description="")
     private String username;
     @Schema(description="")
-    private String password;
+    private String passwordHash;
     @Schema(description="")
     private String nickname;
     @Schema(description="")
@@ -40,7 +40,7 @@ public class User {
 
         return User.builder()
                 .username(username)
-                .password(password)
+                .passwordHash(password)
                 .nickname(nickname != null ? nickname : "用户" + new Random().nextInt(10000))
                 .avatarUrl(avatarUrl)
                 .contactInformation(
@@ -60,7 +60,7 @@ public class User {
 
 
     public boolean validateLogin(String password) {
-        return status.equals(1) && this.password.equals(password);
+        return status.equals(1) && this.passwordHash.equals(password);
     }
 
     public boolean isActive() {
@@ -71,20 +71,20 @@ public class User {
 
         this.assertPasswordNotEmpty(newPassword);
 
-        this.assertPasswordNotSame(password, this.encryptedValue(newPassword));
+        this.assertPasswordNotSame(passwordHash, this.encryptedValue(newPassword));
 
-        this.setPassword(this.encryptedValue(newPassword));
+        this.setPasswordHash(this.encryptedValue(newPassword));
     }
 
     private void assertPasswordNotSame(String password, String newPassword) {
         if(password.equals(newPassword)) {
-            throw new RuntimeException("New password must be different from the current password.");
+            throw new RuntimeException("New passwordHash must be different from the current passwordHash.");
         }
     }
 
     private void assertPasswordNotEmpty(String newPassword) {
         if(newPassword == null || newPassword.isEmpty()) {
-            throw new RuntimeException("New password must not be empty.");
+            throw new RuntimeException("New passwordHash must not be empty.");
         }
     }
 
