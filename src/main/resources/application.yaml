@@ -13,3 +13,8 @@ mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+jwt:
+  # classpath: 表示去 resources 目录下找
+  public-key: classpath:certs/app.pub
+  private-key: classpath:certs/app.key

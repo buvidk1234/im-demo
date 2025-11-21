@@ -15,6 +15,7 @@ public enum BizErrorCode {
     INVALID_CREDENTIALS("AUTH_001", "用户名或密码错误"),
     TOKEN_EXPIRED("AUTH_002", "登录已过期"),
     ACCESS_DENIED("AUTH_003", "没有权限执行该操作"),
+    UNAUTHENTICATED("AUTH_004", "用户未认证"),
 
     // 群组 / 业务相关（结合你前面的 ChatGroup 例子）
     GROUP_NOT_FOUND("GROUP_001", "群组不存在"),

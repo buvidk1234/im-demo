@@ -30,6 +30,13 @@ CREATE TABLE IF NOT EXISTS users (
     phone         VARCHAR(20) NULL,
     email         VARCHAR(100) NULL,
     status        TINYINT NOT NULL DEFAULT 1 COMMENT '1=active,0=disabled',
+
+    -- 补充
+    online_status tinyint default 0,  -- 0=offline,1=online,2=away
+    preferred_online_status tinyint default 1, -- 用户偏好在线状态
+    last_online_at DATETIME NULL,  -- 上次在线时间
+
+
     created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY uk_users_username (username),

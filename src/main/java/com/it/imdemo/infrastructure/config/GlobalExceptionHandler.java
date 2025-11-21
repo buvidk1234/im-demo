@@ -1,4 +1,4 @@
-package com.it.imdemo.interfaces.http.handler;
+package com.it.imdemo.infrastructure.config;
 
 
 import com.it.imdemo.commons.exception.AuthenticationException;
